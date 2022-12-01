@@ -43,4 +43,32 @@ class NetworkManager {
             completion(.success(responseData))
         }.resume()
     }
+    
+    func dataTask(by url: String, completion: @escaping (Result<ProductListResponse, CustomError>) -> ()) {
+        guard let url = URL(string: url) else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.get
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                return completion(.failure(CustomError.statusCodeError))
+            }
+            
+            if let data = data {
+                do {
+                    let decodeData = try JSONDecoder().decode(ProductListResponse.self, from: data)
+                    completion(.success(decodeData))
+                }
+                catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        task.resume()
+    }
 }
