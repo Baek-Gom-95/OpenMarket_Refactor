@@ -11,9 +11,16 @@ class ViewController: UIViewController {
     
     private var containerView: UIView = {
         let container = UIView()
-        container.backgroundColor = .yellow
+        container.backgroundColor = .clear
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
+    }()
+    
+    private var baseView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private var segmentControl: UISegmentedControl = {
@@ -60,14 +67,20 @@ class ViewController: UIViewController {
 
 extension ViewController {
     func configure() {
-        self.view.addSubview(containerView)
+        self.view.addSubview(baseView)
+        self.baseView.addSubview(containerView)
         self.containerView.addSubview(segmentControl)
         self.containerView.addSubview(underLineView)
         
         NSLayoutConstraint.activate([
-            containerView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            containerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            baseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            baseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            baseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            baseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            containerView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: self.baseView.safeAreaLayoutGuide.topAnchor),
             containerView.heightAnchor.constraint(equalToConstant: 40),
             
             segmentControl.topAnchor.constraint(equalTo: containerView.topAnchor),
